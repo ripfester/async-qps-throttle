@@ -25,14 +25,16 @@ class Work {
         this.prev.next = this.next;
         this.next.prev = this.prev;
     }
-    execute() {
+    execute(cleanup) {
         this.expirationTime = Date.now() + 1000;
         try {
             this.startWork()
+                .finally(cleanup)
                 .then(this.resolve)
                 .catch(this.reject);
         }
         catch (e) {
+            cleanup();
             this.reject(e);
         }
         finally {
@@ -93,7 +95,7 @@ class AsyncThrottle {
             this.outstandingCount += 1;
             this.qpsCount += 1;
             // Execute the work. Also update outstanding counts when the work completes, and trigger new work if necessary.
-            work.execute().finally(() => {
+            work.execute(() => {
                 const shouldTriggerWork = this.atMaxOutstanding();
                 if (--this.outstandingCount === 0 && !this.hasReadyWork()) {
                     // ASSERT(this.onLastWorkItemDrained);
