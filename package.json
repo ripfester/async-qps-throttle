@@ -1,5 +1,5 @@
 {
-  "name": "async-throttle",
+  "name": "async-qps-throttle",
   "version": "1.0.0",
   "description": "A promise-based throttling mechanism for Javascript.",
   "main": "dist/async_throttle.js",
