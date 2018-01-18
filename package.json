@@ -1,0 +1,38 @@
+{
+  "name": "async-throttle",
+  "version": "1.0.0",
+  "description": "A promise-based throttling mechanism for Javascript.",
+  "main": "dist/async_throttle.js",
+  "types": "dist/async_throttle.d.ts",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc",
+    "test": "mocha -r ts-node/register test/**/*_test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ripfester/async-throttle.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ripfester/async-throttle/issues"
+  },
+  "homepage": "https://github.com/ripfester/async-throttle#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.1",
+    "@types/lolex": "^2.1.1",
+    "@types/mocha": "^2.2.46",
+    "@types/node": "^9.3.0",
+    "@types/promise.prototype.finally": "^2.0.2",
+    "chai": "^4.1.2",
+    "lolex": "^2.3.1",
+    "mocha": "^4.1.0",
+    "ts-node": "^4.1.0",
+    "typescript": "^2.6.2"
+  },
+  "dependencies": {
+    "promise.prototype.finally": "^3.1.0"
+  }
+}
