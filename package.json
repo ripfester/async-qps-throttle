@@ -1,6 +1,6 @@
 {
   "name": "async-qps-throttle",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A promise-based throttling mechanism for Javascript.",
   "main": "dist/async_throttle.js",
   "types": "dist/async_throttle.d.ts",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ripfester/async-throttle.git"
+    "url": "git+https://github.com/ripfester/async-qps-throttle.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ripfester/async-throttle/issues"
+    "url": "https://github.com/ripfester/async-qps-throttle/issues"
   },
-  "homepage": "https://github.com/ripfester/async-throttle#readme",
+  "homepage": "https://github.com/ripfester/async-qps-throttle#readme",
   "devDependencies": {
     "@types/chai": "^4.1.1",
     "@types/lolex": "^2.1.1",
