@@ -1,7 +1,7 @@
 # async-qps-throttle
 
-This package provides throttling of promise-based work, based on one or both of QPS (queries per second)
-and the amount of concurrent active work. ES6 or higher is required.
+This package provides throttling of promise-based work, based on one or both of the amount of concurrent
+active work and QPS (queries per second). ES6 or higher is required.
 
 ## Use
 
@@ -12,16 +12,16 @@ Simply import `AsyncThrottle` from this package:
 ```
 import {AsyncThrottle} from 'async-qps-throttle';
 
-const throttle = new AsyncThrottle({maxQps: 10, maxOutstanding: 10});
+const throttle = new AsyncThrottle({maxOutstanding: 10, maxQps: 10});
 ```
 
 The constructor takes an options object hash. The available options are:
+  * `maxOutstanding`: The maximum number of work items that may be actively running at any given time
   * `maxQps`: The maximum number of work items that will be *started* in any given second using a rolling
      window (note that work may continue to run and won't count against QPS)
-  * `maxOutstanding`: The maximum number of work items that may be actively running at any given time
 
-The example above creates a throttle that will ensure that no more than 10 work items are executed in any
-given period of one second, and no more than 10 work items are ever concurrently running.
+The example above creates a throttle that will ensure that no more than 10 work items are ever concurrently running,
+and no more than 10 work items are executed in any given period of one second.
 
 ### Providing Work
 
@@ -110,4 +110,62 @@ or will be rejected with the first error that any executed work returned.
 
 ## Details
 
-To come.
+### Outstanding Work Measurement
+
+Outstanding work is measured based on how many concurrent work items are currently running. As an example, suppose there
+are work items that takes varying lengths of time to run and the throttle is set up with `{maxOutstanding: 2}`. Execution
+might proceed as follows:
+
+```
+. = throttled
+* = running
+! = complete
+
+    0ms       1000ms   2000ms    3000ms    4000ms    5000ms    6000ms
+    +---------+--------+---------+---------+---------+---------+
+W1  ********************************************!
+W2  **********!
+W3  ..........******************************!
+W4  ........................................*********!
+W5 .............................................********!
+```
+
+### QPS Measurement
+
+QPS is strictly measured by the *invocation* of work, never how long the work takes to complete. As an example, suppose
+there are work items that takes 3000ms to run and the throttle is set up with `{maxQps: 1}`. Execution would proceed as
+follows:
+
+```
+. = throttled
+* = running
+! = complete
+
+    0ms       1000ms   2000ms    3000ms    4000ms    5000ms    6000ms
+    +---------+--------+---------+---------+---------+---------+
+W1  *****************************!
+W2  ..........*****************************!
+W3  ...................******************************!
+W4  .............................******************************!
+```
+
+Note that during execution, at times there are up to 3 concurrent work items.
+
+### Promises
+
+This package consumes and returns native ES6 promises (`Promise`). If your project uses native promises, read no further.
+However, if your project uses an external promise library (e.g., Bluebird), read on.
+
+If running in a strongly-typed environment (e.g., TypeScript), simply wrap promises on the way in and/or the way out:
+```
+...
+function fancyPromiseGenerator() {return fancyPromise();}
+function fancyPromiseConsumer(fancyPromise) {...}
+
+const rawPromise = throttle.callThrottled(() => Promise.resolve(fancyPromiseGenerator()));
+fancyPromiseConsumer(FancyPromise.resolve(rawPromise));
+
+```
+
+On the other hand, if you are running in a weakly-typed environment (e.g., ES6), it may not be necessary to wrap the
+promises at all. Just note, the promises returned by this module will be fairly basic (no `tap`, `finally`, etc.).

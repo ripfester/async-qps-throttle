@@ -14,7 +14,7 @@
     "url": "git+https://github.com/ripfester/async-qps-throttle.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Todd Harris <ripfester@users.noreply.github.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ripfester/async-qps-throttle/issues"
