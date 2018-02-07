@@ -1,16 +1,17 @@
 # async-qps-throttle
 
 This package provides throttling of promise-based work, based on one or both of the amount of concurrent
-active work and QPS (queries per second). ES6 or higher is required.
+active work and QPS (queries per second). Node.js 4+ or ES6+ is required.
 
 ## Use
 
 ### Creation
 
-Simply import `AsyncThrottle` from this package:
+Simply import `AsyncThrottle` from this package, and instantiate:
 
 ```
-import {AsyncThrottle} from 'async-qps-throttle';
+const {AsyncThrottle} = require('async-qps-throttle');  // Node.js, or
+import {AsyncThrottle} from 'async-qps-throttle';       // ES6
 
 const throttle = new AsyncThrottle({maxOutstanding: 10, maxQps: 10});
 ```
@@ -26,8 +27,8 @@ and no more than 10 work items are executed in any given period of one second.
 ### Providing Work
 
 Work is provided in the form of a function which takes no parameters and returns a promise (the implementation
-uses the native ES6 `Promise`, see below for more information). The use of a generator function allows the
-throttle to determine the appropriate time to actually start the work. Work is provided to the single method
+uses the native `Promise`, see below for more information). The use of a generator function allows the throttle
+to determine the appropriate time to actually start the work. Work is provided to the single method
 `callThrottled`, like so:
 
 ```
@@ -153,7 +154,7 @@ Note that during execution, at times there are up to 3 concurrent work items.
 
 ### Promises
 
-This package consumes and returns native ES6 promises (`Promise`). If your project uses native promises, read no further.
+This package consumes and returns native promises (`Promise`). If your project uses native promises, read no further.
 However, if your project uses an external promise library (e.g., Bluebird), read on.
 
 If running in a strongly-typed environment (e.g., TypeScript), simply wrap promises on the way in and/or the way out:
@@ -167,5 +168,6 @@ fancyPromiseConsumer(FancyPromise.resolve(rawPromise));
 
 ```
 
-On the other hand, if you are running in a weakly-typed environment (e.g., ES6), it may not be necessary to wrap the
-promises at all. Just note, the promises returned by this module will be fairly basic (no `tap`, `finally`, etc.).
+On the other hand, if you are running in a weakly-typed environment (e.g., Node.js or ES6), it may not be necessary
+to wrap the promises at all. Just note, the promises returned by this module will be fairly basic (no `tap`,
+`finally`, etc.).
